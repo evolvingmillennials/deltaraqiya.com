@@ -2,7 +2,7 @@
 
 > Professional email tracking with URL masking using Vercel serverless functions
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-username/deltaraqiya-email-tracking)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/evolvingmillennials/deltaraqiya.com)
 
 ## 🎯 Overview
 
@@ -49,7 +49,7 @@ deltaraqiya-email-tracking/
 ## 🚀 Quick Deploy
 
 ### One-Click Deploy
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-username/deltaraqiya-email-tracking)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/evolvingmillennials/deltaraqiya.com)
 
 ### Manual Deployment
 
@@ -249,7 +249,7 @@ Delta Al Raqiyya is a leading supplier of industrial electrical components and c
 
 ## 📞 Support
 
-- 🐛 **Issues**: [GitHub Issues](https://github.com/your-username/deltaraqiya-email-tracking/issues)
+- 🐛 **Issues**: [GitHub Issues](https://github.com/evolvingmillennials/deltaraqiya.com/issues)
 - 📧 **Email**: info@deltaraqiya.com
 - 🌐 **Website**: [deltaraqiya.com](https://deltaraqiya.com)
 

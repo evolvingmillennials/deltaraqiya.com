@@ -1,42 +1,15 @@
 {
   "name": "deltaraqiya.com",
   "version": "1.0.0",
-  "description": "Email tracking proxy service for Delta Al Raqiyya - masks Google Apps Script URLs with professional Vercel URLs",
+  "description": "Email tracking proxy service for Delta Al Raqiyya",
   "main": "api/track.js",
   "scripts": {
     "dev": "vercel dev",
     "build": "vercel build",
-    "deploy": "vercel --prod",
-    "test": "node test/test-tracking.js"
+    "deploy": "vercel --prod"
   },
-  "keywords": [
-    "email-tracking",
-    "vercel",
-    "serverless",
-    "proxy",
-    "url-masking",
-    "google-apps-script",
-    "delta-raqiyya"
-  ],
-  "author": "Delta Al Raqiyya Team",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/evolvingmillennials/deltaraqiya.com.git"
-  },
-  "homepage": "https://deltaraqiya.com",
   "dependencies": {},
-  "devDependencies": {
-    "vercel": "^32.0.0"
-  },
   "engines": {
     "node": ">=18.x"
-  },
-  "vercel": {
-    "functions": {
-      "api/track.js": {
-        "maxDuration": 10
-      }
-    }
   }
 }

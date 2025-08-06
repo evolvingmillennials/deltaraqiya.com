@@ -1,0 +1,56 @@
+// vercel.json - Vercel configuration
+{
+  "functions": {
+    "api/track.js": {
+      "maxDuration": 10
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/track",
+      "destination": "/api/track"
+    },
+    {
+      "source": "/t/:path*",
+      "destination": "/api/track"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization"
+        }
+      ]
+    }
+  ]
+}
+
+// package.json - Node.js dependencies
+{
+  "name": "deltaraqiya-email-tracking",
+  "version": "1.0.0",
+  "description": "Email tracking proxy for Delta Al Raqiyya",
+  "main": "api/track.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "vercel build",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  },
+  "engines": {
+    "node": ">=14.x"
+  }
+}

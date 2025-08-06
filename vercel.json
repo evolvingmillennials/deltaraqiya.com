@@ -38,7 +38,7 @@
 
 // package.json - Node.js dependencies
 {
-  "name": "deltaraqiya-email-tracking",
+  "name": "deltaraqiya.com",
   "version": "1.0.0",
   "description": "Email tracking proxy for Delta Al Raqiyya",
   "main": "api/track.js",

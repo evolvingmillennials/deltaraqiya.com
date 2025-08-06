@@ -1,258 +1,227 @@
 # Delta Al Raqiyya Email Tracking System
 
-> Professional email tracking with URL masking using Vercel serverless functions
+## 🎯 Problem Solved
+This solution replaces the ugly Google Apps Script URLs in your email tracking with clean, professional URLs using your own domain.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/evolvingmillennials/deltaraqiya.com)
+**Before:** `https://script.google.com/macros/s/AKfycbyniv...`  
+**After:** `https://deltaraqiya.com/track?email=...`
 
-## 🎯 Overview
+## 🚀 Quick Setup Guide
 
-This project provides a professional email tracking solution that masks Google Apps Script URLs with clean, branded Vercel URLs. Perfect for email marketing campaigns where you want to maintain a professional appearance while tracking opens and clicks.
-
-**Before:** `https://script.google.com/macros/s/very-long-google-url.../exec?...`  
-**After:** `https://deltaraqiya.vercel.app/track?email=...&campaign=...`
-
-## ✨ Features
-
-- 🔗 **URL Masking**: Clean, professional URLs instead of Google Apps Script URLs
-- 📊 **Email Tracking**: Track email opens, clicks, and sent status
-- 🚀 **Fast Redirects**: Instant redirects with global CDN performance
-- 📈 **Analytics Integration**: Full integration with existing Google Sheets tracking
-- 🛡️ **Reliable**: Built on Vercel's 99.99% uptime infrastructure
-- 💰 **Free**: No cost for typical email tracking volumes
-
-## 🏗️ Architecture
+### Step 1: Prepare Your Files
+Create a new folder on your computer called `deltaraqiya-tracking` and add these files:
 
 ```
-Email Campaign (VBA/Excel)
-         ↓
-Clean Vercel URLs (deltaraqiya.vercel.app)
-         ↓
-Vercel Serverless Function
-         ↓
-Google Apps Script (existing tracking)
-         ↓
-Google Sheets (tracking data storage)
-```
-
-## 📁 Project Structure
-
-```
-deltaraqiya-email-tracking/
+deltaraqiya-tracking/
+├── package.json
+├── vercel.json
+├── index.html
 ├── api/
-│   └── track.js          # Main serverless tracking function
-├── vercel.json           # Vercel deployment configuration
-├── package.json          # Project dependencies and metadata
-├── README.md            # This file
-└── .gitignore           # Git ignore rules
+│   └── track.js
+└── README.md
 ```
 
-## 🚀 Quick Deploy
+### Step 2: Deploy to Vercel
 
-### One-Click Deploy
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/evolvingmillennials/deltaraqiya.com)
-
-### Manual Deployment
-
-1. **Clone this repository:**
-   ```bash
-   git clone https://github.com/your-username/deltaraqiya-email-tracking.git
-   cd deltaraqiya-email-tracking
-   ```
-
-2. **Install Vercel CLI:**
+1. **Install Vercel CLI** (if not already installed):
    ```bash
    npm install -g vercel
    ```
 
-3. **Login to Vercel:**
+2. **Navigate to your project folder**:
    ```bash
-   vercel login
+   cd deltaraqiya-tracking
    ```
 
-4. **Deploy:**
+3. **Deploy to Vercel**:
    ```bash
-   vercel --prod --name deltaraqiya
+   vercel
+   ```
+   - Follow the prompts
+   - Choose "Link to existing project" or create new
+   - Select your project settings
+
+4. **Get your Vercel URL**:
+   After deployment, Vercel will give you a URL like:
+   `https://deltaraqiya-tracking-abc123.vercel.app`
+
+### Step 3: Connect Your Custom Domain
+
+1. **In Vercel Dashboard**:
+   - Go to your project settings
+   - Click "Domains"
+   - Add your domain: `deltaraqiya.com`
+   - Add subdomain if needed: `track.deltaraqiya.com`
+
+2. **Update DNS Settings** (in your domain provider):
+   ```
+   Type: CNAME
+   Name: @ (or track)
+   Value: cname.vercel-dns.com
    ```
 
-5. **Your tracking URL will be:**
-   ```
-   https://deltaraqiya.vercel.app
-   ```
+### Step 4: Update Your VBA Code
 
-## ⚙️ Configuration
+Replace the tracking base URL in your Excel VBA:
 
-### 1. Update Google Apps Script URL
+```vb
+' OLD URL (ugly):
+Const TRACKING_BASE_URL = "https://script.google.com/macros/s/AKfycbyniv..."
 
-Edit `api/track.js` and replace the `APPS_SCRIPT_URL` with your actual Google Apps Script URL:
-
-```javascript
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+' NEW URL (professional):
+Const TRACKING_BASE_URL = "https://deltaraqiya.com/track"
+' OR use shorter version:
+Const TRACKING_BASE_URL = "https://deltaraqiya.com/t"
 ```
 
-### 2. Update VBA Code
+### Step 5: Test Your Setup
 
-In your Excel VBA code, update the base URL:
-
-```vba
-Const VERCEL_BASE_URL = "https://deltaraqiya.vercel.app"
+Run the VBA test function:
+```vb
+Sub TestTrackingSystem()
 ```
 
-## 📊 Usage Examples
+Check that:
+- ✅ URLs now show as `https://deltaraqiya.com/track?...`
+- ✅ Tracking data appears in your Google Sheet
+- ✅ Redirects work properly
+- ✅ Email opens are tracked
 
-### Tracking Pixel (Email Opens)
+## 📧 How It Works
+
+### Email Flow:
+1. **VBA sends email** with tracking URLs using your domain
+2. **User sees clean URL** when hovering over links
+3. **User clicks link** → Goes to `https://deltaraqiya.com/track?...`
+4. **Vercel proxy** receives request and forwards to Google Apps Script
+5. **Google Apps Script** processes tracking data
+6. **User gets redirected** to your actual website
+7. **Tracking data** appears in your Google Sheet
+
+### URL Examples:
+
+**Tracking Pixel (opens):**
 ```
-https://deltaraqiya.vercel.app/track?email=user@example.com&campaign=summer2024&type=open
+https://deltaraqiya.com/track?email=user@email.com&campaign=HEX_Brass_Cable_Glands_20250806&type=open
 ```
 
-### Click Tracking
+**Click Tracking:**
 ```
-https://deltaraqiya.vercel.app/track?email=user@example.com&campaign=summer2024&type=click&destination=https://deltaraqiya.com
-```
-
-### Sent Tracking
-```
-https://deltaraqiya.vercel.app/track?email=user@example.com&campaign=summer2024&type=sent&sentTime=2024-01-01%2012:00:00
+https://deltaraqiya.com/track?email=user@email.com&campaign=HEX_Brass_Cable_Glands_20250806&type=click&destination=https://deltaraqiya.com
 ```
 
-## 🧪 Testing
+## 🔧 Configuration Options
 
-### Test the API directly:
+### Custom Paths
+You can use different paths by updating `vercel.json`:
+```json
+"rewrites": [
+  {
+    "source": "/track",
+    "destination": "/api/track"
+  },
+  {
+    "source": "/t",           // Short version
+    "destination": "/api/track"
+  },
+  {
+    "source": "/pixel",       // Alternative
+    "destination": "/api/track"
+  }
+]
+```
 
-1. **Open Tracking Test:**
-   ```bash
-   curl "https://deltaraqiya.vercel.app/track?email=test@example.com&campaign=test&type=open"
-   ```
-   Expected: Returns 1x1 transparent pixel
+### Environment Variables
+For additional security, you can set environment variables in Vercel:
+- `GOOGLE_SCRIPT_URL`: Your Google Apps Script URL
+- `ALLOWED_DOMAINS`: Comma-separated list of allowed domains
 
-2. **Click Tracking Test:**
-   ```bash
-   curl -I "https://deltaraqiya.vercel.app/track?email=test@example.com&campaign=test&type=click&destination=https://deltaraqiya.com"
-   ```
-   Expected: Returns 302 redirect
+## 🛠️ Troubleshooting
 
-3. **VBA Integration Test:**
-   Run the `TestTrackingSystemWithVercel()` function in your Excel VBA
+### Common Issues:
 
-## 📈 Monitoring
+**1. "Domain not working"**
+- Check DNS propagation (can take up to 24 hours)
+- Verify CNAME record is correct
+- Try accessing the Vercel URL directly first
 
-### Vercel Dashboard
-- Monitor function invocations
-- View response times and errors
-- Check deployment status
+**2. "Tracking not working"**
+- Check Google Apps Script is still accessible
+- Verify your script URL in `api/track.js`
+- Check Vercel function logs
+
+**3. "Redirects not working"**
+- Ensure destination URLs include `http://` or `https://`
+- Check for URL encoding issues
+
+### Debug Steps:
+1. Test Vercel URL directly: `https://your-project.vercel.app/track`
+2. Check Vercel function logs in dashboard
+3. Test Google Apps Script independently
+4. Use VBA Debug.Print to see generated URLs
+
+## 📊 Monitoring
+
+### Vercel Analytics
+- View function invocations in Vercel dashboard
+- Monitor response times
+- Check error rates
 
 ### Google Apps Script Logs
-- Your existing Google Sheets tracking continues to work
-- All tracking data is preserved
+- Your original tracking still works
+- All data goes to the same Google Sheet
 - No changes needed to your spreadsheet
 
-## 🔧 Customization
+## 🔒 Security Features
 
-### Custom Tracking Endpoints
+- CORS headers properly configured
+- User agent forwarding
+- IP address tracking
+- Rate limiting through Vercel
+- Clean URL parameters only
 
-Modify `vercel.json` to add custom URL patterns:
+## 💡 Additional Features
 
-```json
-{
-  "rewrites": [
-    {
-      "source": "/t/:path*",
-      "destination": "/api/track"
-    },
-    {
-      "source": "/email/:path*", 
-      "destination": "/api/track"
-    }
-  ]
-}
-```
+### Professional Landing Page
+Your domain now shows a professional landing page at `https://deltaraqiya.com`
 
-### Add Analytics
+### Multiple Tracking URLs
+- `/track` - Full tracking endpoint
+- `/t` - Short tracking endpoint
+- Both work identically
 
-Extend `api/track.js` to include additional analytics:
+### Fallback Handling
+- If Google Apps Script is down, redirects still work
+- Tracking failures don't break user experience
+- Retry logic for improved reliability
 
-```javascript
-// Add Google Analytics, Mixpanel, etc.
-if (type === 'click') {
-  analytics.track('email_click', { email, campaign });
-}
-```
+## 🚀 Advanced Customization
 
-## 🛡️ Security
+### Custom Styling
+Edit `index.html` to match your branding
 
-- ✅ CORS headers properly configured
-- ✅ Input validation and sanitization
-- ✅ Error handling for failed requests
-- ✅ Graceful fallbacks if backend is unavailable
+### Additional Endpoints
+Add more API routes in the `api/` folder
 
-## 📝 API Documentation
-
-### Parameters
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `email` | string | Yes | Recipient email address |
-| `campaign` | string | Yes | Campaign identifier |
-| `type` | string | No | Tracking type: `open`, `click`, `sent` (default: `open`) |
-| `destination` | string | No | Redirect URL for click tracking |
-| `sentTime` | string | No | Email sent timestamp |
-
-### Response Types
-
-- **Open Tracking**: Returns 1x1 transparent GIF
-- **Click Tracking**: Returns 302 redirect to destination
-- **Sent Tracking**: Returns JSON response
-
-## 🚨 Troubleshooting
-
-### Common Issues
-
-1. **Vercel URL not working**
-   - Check deployment status in Vercel dashboard
-   - Verify project name is correct
-
-2. **Tracking not recording**
-   - Verify Google Apps Script URL in `api/track.js`
-   - Check Google Apps Script permissions
-   - Review Vercel function logs
-
-3. **Redirects not working**
-   - Ensure destination URLs include `http://` or `https://`
-   - Check for URL encoding issues
-
-### Debug Mode
-
-Add logging to `api/track.js`:
-
-```javascript
-console.log('Received request:', {
-  email, campaign, type, destination
-});
-```
-
-View logs in Vercel dashboard > Functions tab.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/improvement`)
-3. Commit your changes (`git commit -am 'Add new feature'`)
-4. Push to the branch (`git push origin feature/improvement`)
-5. Create a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🏢 About Delta Al Raqiyya
-
-Delta Al Raqiyya is a leading supplier of industrial electrical components and cable management solutions. Visit us at [deltaraqiya.com](https://deltaraqiya.com).
+### Analytics Integration
+Add Google Analytics, Facebook Pixel, etc.
 
 ## 📞 Support
 
-- 🐛 **Issues**: [GitHub Issues](https://github.com/evolvingmillennials/deltaraqiya.com/issues)
-- 📧 **Email**: info@deltaraqiya.com
-- 🌐 **Website**: [deltaraqiya.com](https://deltaraqiya.com)
+If you encounter issues:
+1. Check Vercel deployment logs
+2. Verify DNS settings
+3. Test each component individually
+4. Check Google Apps Script permissions
 
 ---
 
-**Built with ❤️ by Delta Al Raqiyya Team**
+## Final Result
+
+Your email recipients will now see:
+- **Professional URLs**: `https://deltaraqiya.com/track?...`
+- **Clean appearance** when hovering over links
+- **Seamless redirects** to your website
+- **Same tracking functionality** as before
+
+The ugly Google Apps Script URLs are completely hidden while maintaining all functionality!

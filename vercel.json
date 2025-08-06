@@ -1,4 +1,4 @@
-// vercel.json - Vercel configuration
+
 {
   "functions": {
     "api/track.js": {
@@ -36,7 +36,6 @@
   ]
 }
 
-// package.json - Node.js dependencies
 {
   "name": "deltaraqiya.com",
   "version": "1.0.0",

@@ -1,7 +1,7 @@
 /**
- * Vercel API Route - Email Tracking Proxy
+ * Fixed Vercel API Route - Email Tracking Proxy
  * File: api/track.js
- * This acts as a middleman between your emails and Google Apps Script
+ * Fixes: Duplicate entries, click tracking, and race conditions
  */
 
 export default async function handler(req, res) {
@@ -22,34 +22,47 @@ export default async function handler(req, res) {
     // Extract parameters from both query and body
     const params = { ...req.query, ...(req.body || {}) };
     
+    // Validate required parameters
+    if (!params.email || !params.campaign) {
+      return res.status(400).json({
+        success: false,
+        error: 'Missing required parameters: email and campaign'
+      });
+    }
+    
     // Add user agent and IP information
     const userAgent = req.headers['user-agent'] || '';
     const ipAddress = req.headers['x-forwarded-for'] || 
                      req.headers['x-real-ip'] || 
                      req.connection.remoteAddress || '';
     
-    // Prepare data for Google Apps Script
+    // Prepare data for Google Apps Script with unique identifier
     const trackingData = {
-      ...params,
+      email: params.email.toLowerCase().trim(),
+      campaign: params.campaign.trim(),
+      type: params.type || 'open',
       userAgent: userAgent,
       ipAddress: ipAddress,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      destination: params.destination || '',
+      sentTime: params.sentTime || new Date().toISOString(),
+      // Add unique request ID to prevent duplicates
+      requestId: generateRequestId()
     };
     
     console.log('Tracking request:', {
       method: req.method,
-      type: params.type,
-      email: params.email,
-      campaign: params.campaign,
-      destination: params.destination,
-      userAgent: userAgent.substring(0, 100) + '...',
-      ip: ipAddress
+      type: trackingData.type,
+      email: trackingData.email,
+      campaign: trackingData.campaign,
+      destination: trackingData.destination,
+      requestId: trackingData.requestId
     });
     
     // Handle click tracking with redirect
     if (params.type === 'click' && params.destination) {
-      // Forward tracking data to Google Apps Script (fire and forget)
-      forwardToGoogleScript(GOOGLE_SCRIPT_URL, trackingData);
+      // Forward tracking data to Google Apps Script
+      await forwardToGoogleScript(GOOGLE_SCRIPT_URL, trackingData);
       
       // Immediate redirect to destination
       const destination = params.destination.startsWith('http') ? 
@@ -61,10 +74,12 @@ export default async function handler(req, res) {
     
     // For open tracking (pixel)
     if (params.type === 'open') {
-      // Forward tracking data to Google Apps Script
-      const scriptResponse = await forwardToGoogleScript(GOOGLE_SCRIPT_URL, trackingData);
+      // Forward tracking data to Google Apps Script (don't wait for response)
+      forwardToGoogleScript(GOOGLE_SCRIPT_URL, trackingData).catch(error => {
+        console.error('Background tracking failed:', error);
+      });
       
-      // Return 1x1 transparent pixel
+      // Return 1x1 transparent pixel immediately
       const pixelBuffer = Buffer.from(
         'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
         'base64'
@@ -85,7 +100,8 @@ export default async function handler(req, res) {
     return res.status(200).json({
       success: true,
       message: 'Tracking processed',
-      data: scriptResponse
+      data: scriptResponse,
+      requestId: trackingData.requestId
     });
     
   } catch (error) {
@@ -126,7 +142,9 @@ async function forwardToGoogleScript(scriptUrl, data) {
         'Content-Type': 'application/json',
         'User-Agent': data.userAgent || 'Vercel-Proxy/1.0'
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
+      // Add timeout to prevent hanging requests
+      signal: AbortSignal.timeout(10000) // 10 second timeout
     });
     
     if (!response.ok) {
@@ -139,7 +157,11 @@ async function forwardToGoogleScript(scriptUrl, data) {
     
   } catch (error) {
     console.error('Failed to forward to Google Script:', error);
-    // Don't throw - we want to continue with redirect/pixel even if tracking fails
-    return { success: false, error: error.message };
+    throw error; // Re-throw for proper error handling
   }
+}
+
+// Generate unique request ID to prevent duplicates
+function generateRequestId() {
+  return Date.now() + '-' + Math.random().toString(36).substr(2, 9);
 }

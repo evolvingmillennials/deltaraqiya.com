@@ -1,15 +1,17 @@
 {
   "name": "deltaraqiya.com",
   "version": "1.0.0",
-  "description": "Email tracking proxy service for Delta Al Raqiyya",
-  "main": "api/track.js",
+  "description": "Email tracking proxy for Delta Al Raqiyya",
+  "main": "index.js",
   "scripts": {
     "dev": "vercel dev",
-    "build": "vercel build",
+    "build": "echo 'No build step required'",
     "deploy": "vercel --prod"
   },
-  "dependencies": {},
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  },
   "engines": {
-    "node": ">=18.x"
+    "node": ">=16.x"
   }
 }

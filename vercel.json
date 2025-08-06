@@ -1,7 +1,7 @@
 {
   "functions": {
     "api/track.js": {
-      "maxDuration": 10
+      "maxDuration": 30
     }
   },
   "rewrites": [
@@ -10,7 +10,7 @@
       "destination": "/api/track"
     },
     {
-      "source": "/t/:path*",
+      "source": "/t",
       "destination": "/api/track"
     }
   ],
@@ -28,7 +28,7 @@
         },
         {
           "key": "Access-Control-Allow-Headers",
-          "value": "Content-Type, Authorization"
+          "value": "Content-Type, User-Agent, Referer"
         }
       ]
     }
